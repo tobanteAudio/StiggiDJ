@@ -5,7 +5,7 @@ namespace ta
 
 DJPlayer::DJPlayer(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager) {}
 
-DJPlayer::~DJPlayer() {}
+DJPlayer::~DJPlayer() = default;
 
 auto DJPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> void
 {
@@ -36,6 +36,10 @@ auto DJPlayer::loadFile(juce::File audioFile) -> LengthAndSamplerate
         transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
         readerSource.reset(newSource.release());
     }
+
+    gain(1.0);
+    positionRelative(0.0);
+    _listeners.call(&Listener::djPlayerFileChanged, audioFile);
 
     return LengthAndSamplerate{length, sr};
 }

@@ -28,7 +28,7 @@ private:
     ta::SideBarLeft _sideBarLeft{};
     ta::SideBarRight _sideBarRight{};
     ta::MainSection _jogWheel;
-    ta::Display _display{_formatManager};
+    ta::Display _display{_formatManager, _djPlayer};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

@@ -13,7 +13,15 @@ void WaveformDisplay::paint(juce::Graphics& g)
     auto area = getLocalBounds().reduced(5);
 
     g.setColour(juce::Colours::white);
-    if (fileLoaded_) { audioThumb_.drawChannel(g, area, 0, audioThumb_.getTotalLength(), 0, 1.0f); }
+    if (fileLoaded_)
+    {
+        audioThumb_.drawChannel(g, area, 0, audioThumb_.getTotalLength(), 0, 1.0f);
+
+        auto x      = area.getX() + (area.getWidth() * position_);
+        auto top    = area.getY();
+        auto bottom = area.getBottom();
+        g.fillRect(juce::Rectangle<float>(x, top, 3.0f, bottom - top));
+    }
 }
 
 void WaveformDisplay::loadURL(juce::URL audioURL)

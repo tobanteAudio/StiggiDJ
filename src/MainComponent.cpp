@@ -65,7 +65,4 @@ auto MainComponent::setAudioDevices() -> void
 
     auto file = juce::File{"/home/tobante/Music/Loops/Bass.wav"};
     _djPlayer.loadFile(file);
-    _display.loadURL(juce::URL{file});
-    _djPlayer.gain(1.0);
-    _djPlayer.positionRelative(0.0);
 }
