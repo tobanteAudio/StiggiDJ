@@ -12,18 +12,18 @@ struct WaveformDisplay final
     WaveformDisplay(juce::AudioFormatManager& formatManager, juce::AudioThumbnailCache& cache);
     ~WaveformDisplay() override = default;
 
-    void loadURL(juce::URL audioURL);
+    void loadURL(juce::URL const& audioURL);
 
     /// \brief Set the relative position of the playhead
     void setPositionRelative(double pos);
 
-    void paint(juce::Graphics&) override;
+    void paint(juce::Graphics& g) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
 private:
-    juce::AudioThumbnail audioThumb_;
-    bool fileLoaded_;
-    double position_;
+    juce::AudioThumbnail _audioThumb;
+    bool _fileLoaded{false};
+    double _position{0};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformDisplay)
 };

@@ -12,9 +12,9 @@
 struct MainComponent final : juce::Component
 {
     MainComponent();
-    ~MainComponent();
+    ~MainComponent() override;
 
-    auto paint(juce::Graphics&) -> void override;
+    auto paint(juce::Graphics& g) -> void override;
     auto resized() -> void override;
 
 private:

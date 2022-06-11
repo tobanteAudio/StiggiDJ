@@ -1,7 +1,5 @@
 export PATH := $(shell pwd)/scripts:$(PATH)
 
-BUILD_DIR ?= $(BUILD_DIR_BASE)_$(CONFIG)
-
 CLANG_FORMAT_BIN ?= clang-format
 CLANG_REPLACEMENTS_BIN ?= clang-apply-replacements-14
 CLANG_TIDY_BIN ?= clang-tidy-14

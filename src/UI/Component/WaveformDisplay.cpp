@@ -3,9 +3,9 @@
 namespace ta
 {
 WaveformDisplay::WaveformDisplay(juce::AudioFormatManager& formatManagerToUse, juce::AudioThumbnailCache& cacheToUse)
-    : audioThumb_(1000, formatManagerToUse, cacheToUse), fileLoaded_(false), position_(0)
+    : _audioThumb(1000, formatManagerToUse, cacheToUse)
 {
-    audioThumb_.addChangeListener(this);
+    _audioThumb.addChangeListener(this);
 }
 
 void WaveformDisplay::paint(juce::Graphics& g)
@@ -13,31 +13,31 @@ void WaveformDisplay::paint(juce::Graphics& g)
     auto area = getLocalBounds().reduced(5);
 
     g.setColour(juce::Colours::white);
-    if (fileLoaded_)
+    if (_fileLoaded)
     {
-        audioThumb_.drawChannel(g, area, 0, audioThumb_.getTotalLength(), 0, 1.0f);
+        _audioThumb.drawChannel(g, area, 0, _audioThumb.getTotalLength(), 0, 1.0f);
 
-        auto x      = area.getX() + (area.getWidth() * position_);
+        auto x      = area.getX() + (area.getWidth() * _position);
         auto top    = area.getY();
         auto bottom = area.getBottom();
         g.fillRect(juce::Rectangle<float>(x, top, 3.0f, bottom - top));
     }
 }
 
-void WaveformDisplay::loadURL(juce::URL audioURL)
+void WaveformDisplay::loadURL(juce::URL const& audioURL)
 {
-    audioThumb_.clear();
-    fileLoaded_ = audioThumb_.setSource(new juce::URLInputSource(audioURL));
-    if (fileLoaded_) { repaint(); }
+    _audioThumb.clear();
+    _fileLoaded = _audioThumb.setSource(new juce::URLInputSource(audioURL));
+    if (_fileLoaded) { repaint(); }
 }
 
 void WaveformDisplay::changeListenerCallback(juce::ChangeBroadcaster* /*source*/) { repaint(); }
 
 void WaveformDisplay::setPositionRelative(double pos)
 {
-    if (pos != position_ && !std::isnan(pos))
+    if (pos != _position && !std::isnan(pos))
     {
-        position_ = pos;
+        _position = pos;
         repaint();
     }
 }

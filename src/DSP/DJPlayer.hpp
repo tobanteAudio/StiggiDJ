@@ -23,7 +23,7 @@ struct DJPlayer final : juce::AudioSource
 {
     using Listener = DJPlayerListener;
 
-    explicit DJPlayer(juce::AudioFormatManager& _formatManager);
+    explicit DJPlayer(juce::AudioFormatManager& formatManager);
     ~DJPlayer() override;
 
     auto loadFile(juce::File audioFile) -> LengthAndSamplerate;
@@ -55,10 +55,10 @@ struct DJPlayer final : juce::AudioSource
     auto releaseResources() -> void override;
 
 private:
-    juce::AudioFormatManager& formatManager;
-    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
-    juce::AudioTransportSource transportSource;
-    juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
+    juce::AudioFormatManager& _formatManager;
+    std::unique_ptr<juce::AudioFormatReaderSource> _readerSource;
+    juce::AudioTransportSource _transportSource;
+    juce::ResamplingAudioSource _resampleSource{&_transportSource, false, 2};
 
     juce::ListenerList<Listener> _listeners;
 };
