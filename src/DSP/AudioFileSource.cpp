@@ -4,24 +4,25 @@ namespace ta
 {
 
 AudioFileSource::AudioFileSource(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager) {}
+
 AudioFileSource::~AudioFileSource() {}
 
-void AudioFileSource::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
+auto AudioFileSource::prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> void
 {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
-void AudioFileSource::getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill)
+auto AudioFileSource::getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill) -> void
 {
     resampleSource.getNextAudioBlock(bufferToFill);
 }
-void AudioFileSource::releaseResources()
+auto AudioFileSource::releaseResources() -> void
 {
     transportSource.releaseResources();
     resampleSource.releaseResources();
 }
 
-LengthAndSamplerate AudioFileSource::loadFile(juce::File audioFile)
+auto AudioFileSource::loadFile(juce::File audioFile) -> LengthAndSamplerate
 {
     auto sr      = 0.0;
     auto length  = 0;
@@ -39,40 +40,34 @@ LengthAndSamplerate AudioFileSource::loadFile(juce::File audioFile)
     return LengthAndSamplerate{length, sr};
 }
 
-void AudioFileSource::setGain(double gain)
+auto AudioFileSource::gain(double gain) -> void
 {
-    if (gain < 0 || gain > 1.0) { std::cout << "AudioFileSource::setGain gain should be between 0 and 1" << std::endl; }
-    else { transportSource.setGain(gain); }
+    jassert(juce::isPositiveAndBelow(gain, 4.0));
+    transportSource.setGain(gain);
 }
-void AudioFileSource::setSpeed(double ratio)
+auto AudioFileSource::speed(double ratio) -> void
 {
-    if (ratio <= 0 || ratio > 100.0)
-    {
-        std::cout << "AudioFileSource::setSpeed ratio should be between 0 and 100" << std::endl;
-    }
-    else { resampleSource.setResamplingRatio(ratio); }
-}
-void AudioFileSource::setPosition(double posInSecs) { transportSource.setPosition(posInSecs); }
-
-void AudioFileSource::setPositionRelative(double pos)
-{
-    if (pos < 0 || pos > 1.0)
-    {
-        std::cout << "AudioFileSource::setPositionRelative pos should be between 0 and 1" << std::endl;
-    }
-    else
-    {
-        double posInSecs = transportSource.getLengthInSeconds() * pos;
-        setPosition(posInSecs);
-    }
+    jassert(juce::isPositiveAndBelow(ratio, 4.0));
+    resampleSource.setResamplingRatio(ratio);
 }
 
-void AudioFileSource::start() { transportSource.start(); }
-void AudioFileSource::stop() { transportSource.stop(); }
+auto AudioFileSource::position(double posInSecs) -> void { transportSource.setPosition(posInSecs); }
 
-double AudioFileSource::getPositionRelative()
+auto AudioFileSource::positionRelative(double pos) -> void
+{
+    jassert(juce::isPositiveAndBelow(pos, 1.0));
+    position(transportSource.getLengthInSeconds() * pos);
+}
+
+auto AudioFileSource::startPlayback() -> void { transportSource.start(); }
+
+auto AudioFileSource::stopPlayback() -> void { transportSource.stop(); }
+
+auto AudioFileSource::positionRelative() const -> double
 {
     return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 }
+
+auto AudioFileSource::isPlaying() const -> bool { return transportSource.isPlaying(); }
 
 }  // namespace ta

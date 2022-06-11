@@ -12,25 +12,31 @@ struct LengthAndSamplerate
     double samplerate{0.0};
 };
 
-class AudioFileSource : public juce::AudioSource
+struct AudioFileSource final : juce::AudioSource
 {
-public:
-    AudioFileSource(juce::AudioFormatManager& _formatManager);
+    explicit AudioFileSource(juce::AudioFormatManager& _formatManager);
     ~AudioFileSource() override;
 
     auto loadFile(juce::File audioFile) -> LengthAndSamplerate;
-    auto setGain(double gain) -> void;
-    auto setSpeed(double ratio) -> void;
-    auto setPosition(double posInSecs) -> void;
-    auto setPositionRelative(double pos) -> void;
 
-    auto start() -> void;
-    auto stop() -> void;
+    auto gain(double gain) -> void;
+    auto speed(double ratio) -> void;
 
-    auto getPositionRelative() -> double;
+    auto position(double posInSecs) -> void;
+    auto positionRelative(double pos) -> void;
+    auto positionRelative() const -> double;
 
+    auto startPlayback() -> void;
+    auto stopPlayback() -> void;
+    auto isPlaying() const -> bool;
+
+    /// \brief Implements juce::AudioSource::prepareToPlay()
     auto prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> void override;
+
+    /// \brief Implements juce::AudioSource::getNextAudioBlock()
     auto getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill) -> void override;
+
+    /// \brief Implements juce::AudioSource::releaseResources()
     auto releaseResources() -> void override;
 
 private:

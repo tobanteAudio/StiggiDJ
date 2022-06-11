@@ -11,13 +11,19 @@ MainComponent::MainComponent() : _audioFileSource{_formatManager}
     addAndMakeVisible(_display);
     addAndMakeVisible(_jogWheel);
 
-    _sideBarLeft.onPlayClicked = [this]() { _audioFileSource.start(); };
-    _sideBarLeft.onCueClicked  = [this]() { _audioFileSource.stop(); };
+    _sideBarLeft.onPlayClicked = [this]()
+    {
+        if (_audioFileSource.isPlaying()) { _audioFileSource.stopPlayback(); }
+        else { _audioFileSource.startPlayback(); }
+    };
+
+    _sideBarLeft.onCueClicked         = [this]() { _audioFileSource.positionRelative(0.0); };
+    _sideBarRight.onTempoDeltaChanged = [this](double delta) { _audioFileSource.speed((100.0 + delta) / 100.0); };
     setSize(640, 800);
 }
 MainComponent::~MainComponent()
 {
-    _audioFileSource.stop();
+    _audioFileSource.stopPlayback();
     _deviceManager.removeAudioCallback(&_audioPlayer);
     _audioPlayer.setSource(nullptr);
 }
@@ -58,5 +64,5 @@ auto MainComponent::setAudioDevices() -> void
     _audioPlayer.setSource(&_audioFileSource);
 
     _audioFileSource.loadFile(juce::File{"/home/tobante/Music/Loops/Bass.wav"});
-    _audioFileSource.setGain(1.0);
+    _audioFileSource.gain(1.0);
 }

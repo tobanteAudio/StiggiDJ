@@ -12,6 +12,8 @@ struct SideBarRight final : juce::Component
 
     auto resized() -> void override;
 
+    std::function<void(double)> onTempoDeltaChanged{};
+
 private:
     Placeholder _placeholder{"", juce::Colours::transparentBlack};
     juce::TextButton _vinylButton{"Vinyl"};

@@ -8,6 +8,13 @@ SideBarRight::SideBarRight()
     addAndMakeVisible(_vinylButton);
     addAndMakeVisible(_warpButton);
     addAndMakeVisible(_tempo);
+
+    _tempo.setRange({-6.0, 6.0}, 0.01);
+    _tempo.setValue(0.0, juce::dontSendNotification);
+    _tempo.onValueChange = [this]()
+    {
+        if (onTempoDeltaChanged) { onTempoDeltaChanged(_tempo.getValue()); }
+    };
 }
 
 auto SideBarRight::resized() -> void
