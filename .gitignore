@@ -6,6 +6,7 @@
 /resources/samples
 /build
 /cmake-build-*
+/venv
 
 .DS_Store
 *.pdf
