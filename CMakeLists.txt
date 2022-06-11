@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.15)
 project(app-stiggi-dj VERSION 0.1.0)
 
+option(TA_ENABLE_COVERAGE   "Build with coverage enabled"                       OFF)
+option(TA_ENABLE_ASAN       "Build with address sanitizer enabled"              OFF)
+option(TA_ENABLE_UBSAN      "Build with undefined behavior sanitizer enabled"   OFF)
+option(TA_ENABLE_TSAN       "Build with thread sanitizer enabled"               OFF)
+option(TA_ENABLE_MSAN       "Build with memory sanitizer enabled"               OFF)
+option(TA_ENABLE_WERROR     "Build with warnings as errors"                     OFF)
+
 # Only do these if this is the main project,
 # and not if it is included through add_subdirectory.
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
