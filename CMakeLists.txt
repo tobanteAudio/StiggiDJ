@@ -35,11 +35,22 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11")
 endif ()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(CompilerOptions)
+include(CompilerWarnings)
+include(CodeCoverage)
+
 add_subdirectory(3rd_party/JUCE)
+set_directory_properties(PROPERTIES JUCE_COMPANY_COPYRIGHT "SPDX: GPL-3.0-only")
+set_directory_properties(PROPERTIES JUCE_COMPANY_NAME "tobantAudio")
+set_directory_properties(PROPERTIES JUCE_COMPANY_WEBSITE "https://github.com/tobanteAudio/StiggiDJ")
+set_directory_properties(PROPERTIES JUCE_COMPANY_EMAIL "tobanteAudio@gmail.com")
 
 juce_add_gui_app(StiggiDJ
-    COMPANY_NAME "tobanteAudio"         # Specify the name of the app's author
-    PRODUCT_NAME "Stiggi DJ"            # The name of the final executable, which can differ from the target name
+    PRODUCT_NAME "Stiggi DJ"
+    BUNDLE_ID "com.tobanteAudio.stiggi-dj"
+    VERSION ${CMAKE_PROJECT_VERSION}
+    HARDENED_RUNTIME_ENABLED TRUE
 )
 
 target_sources(StiggiDJ
@@ -72,10 +83,14 @@ target_sources(StiggiDJ
 
 target_compile_definitions(StiggiDJ
     PRIVATE
-        JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_gui_app` call
-        JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_gui_app` call
         JUCE_APPLICATION_NAME_STRING="$<TARGET_PROPERTY:StiggiDJ,JUCE_PRODUCT_NAME>"
         JUCE_APPLICATION_VERSION_STRING="$<TARGET_PROPERTY:StiggiDJ,JUCE_VERSION>"
+        JUCE_DISPLAY_SPLASH_SCREEN=0
+        JUCE_MODAL_LOOPS_PERMITTED=1
+        JUCE_REPORT_APP_USAGE=0
+        DONT_SET_USING_JUCE_NAMESPACE=1
+        JUCE_USE_CURL=0
+        JUCE_WEB_BROWSER=0
 )
 
 target_include_directories(StiggiDJ
@@ -94,4 +109,7 @@ target_link_libraries(StiggiDJ
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
+        ta::compiler_options
+        ta::compiler_warnings
+        ta::coverage
 )
