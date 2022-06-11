@@ -15,9 +15,12 @@ struct SideBarRight final : juce::Component
     std::function<void(double)> onTempoDeltaChanged{};
 
 private:
+    auto updateSpeedRange() -> void;
+
     Placeholder _placeholder{"", juce::Colours::transparentBlack};
     juce::TextButton _vinylButton{"Vinyl"};
     juce::TextButton _warpButton{"Warp"};
+    juce::ComboBox _tempoRange;
     juce::Slider _tempo{juce::Slider::LinearVertical, juce::Slider::TextBoxBelow};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SideBarRight)
