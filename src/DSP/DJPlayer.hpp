@@ -12,10 +12,19 @@ struct LengthAndSamplerate
     double samplerate{0.0};
 };
 
-struct AudioFileSource final : juce::AudioSource
+struct DJPlayerListener
 {
-    explicit AudioFileSource(juce::AudioFormatManager& _formatManager);
-    ~AudioFileSource() override;
+    virtual ~DJPlayerListener() = default;
+
+    virtual auto djPlayerFileChanged(juce::File const& file) -> void = 0;
+};
+
+struct DJPlayer final : juce::AudioSource
+{
+    using Listener = DJPlayerListener;
+
+    explicit DJPlayer(juce::AudioFormatManager& _formatManager);
+    ~DJPlayer() override;
 
     auto loadFile(juce::File audioFile) -> LengthAndSamplerate;
 
@@ -30,13 +39,19 @@ struct AudioFileSource final : juce::AudioSource
     auto stopPlayback() -> void;
     auto isPlaying() const -> bool;
 
+    auto addListener(Listener* listener) -> void;
+    auto removeListener(Listener* listener) -> void;
+
     /// \brief Implements juce::AudioSource::prepareToPlay()
+    /// \internal
     auto prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> void override;
 
     /// \brief Implements juce::AudioSource::getNextAudioBlock()
+    /// \internal
     auto getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill) -> void override;
 
     /// \brief Implements juce::AudioSource::releaseResources()
+    /// \internal
     auto releaseResources() -> void override;
 
 private:
@@ -44,5 +59,7 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
+
+    juce::ListenerList<Listener> _listeners;
 };
 }  // namespace ta

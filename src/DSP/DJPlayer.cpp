@@ -1,28 +1,28 @@
-#include "AudioFileSource.hpp"
+#include "DJPlayer.hpp"
 
 namespace ta
 {
 
-AudioFileSource::AudioFileSource(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager) {}
+DJPlayer::DJPlayer(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager) {}
 
-AudioFileSource::~AudioFileSource() {}
+DJPlayer::~DJPlayer() {}
 
-auto AudioFileSource::prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> void
+auto DJPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> void
 {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
-auto AudioFileSource::getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill) -> void
+auto DJPlayer::getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill) -> void
 {
     resampleSource.getNextAudioBlock(bufferToFill);
 }
-auto AudioFileSource::releaseResources() -> void
+auto DJPlayer::releaseResources() -> void
 {
     transportSource.releaseResources();
     resampleSource.releaseResources();
 }
 
-auto AudioFileSource::loadFile(juce::File audioFile) -> LengthAndSamplerate
+auto DJPlayer::loadFile(juce::File audioFile) -> LengthAndSamplerate
 {
     auto sr      = 0.0;
     auto length  = 0;
@@ -40,34 +40,38 @@ auto AudioFileSource::loadFile(juce::File audioFile) -> LengthAndSamplerate
     return LengthAndSamplerate{length, sr};
 }
 
-auto AudioFileSource::gain(double gain) -> void
+auto DJPlayer::gain(double gain) -> void
 {
     jassert(juce::isPositiveAndBelow(gain, 4.0));
     transportSource.setGain(gain);
 }
-auto AudioFileSource::speed(double ratio) -> void
+auto DJPlayer::speed(double ratio) -> void
 {
     jassert(juce::isPositiveAndBelow(ratio, 4.0));
     resampleSource.setResamplingRatio(ratio);
 }
 
-auto AudioFileSource::position(double posInSecs) -> void { transportSource.setPosition(posInSecs); }
+auto DJPlayer::position(double posInSecs) -> void { transportSource.setPosition(posInSecs); }
 
-auto AudioFileSource::positionRelative(double pos) -> void
+auto DJPlayer::positionRelative(double pos) -> void
 {
     jassert(juce::isPositiveAndBelow(pos, 1.0));
     position(transportSource.getLengthInSeconds() * pos);
 }
 
-auto AudioFileSource::startPlayback() -> void { transportSource.start(); }
+auto DJPlayer::startPlayback() -> void { transportSource.start(); }
 
-auto AudioFileSource::stopPlayback() -> void { transportSource.stop(); }
+auto DJPlayer::stopPlayback() -> void { transportSource.stop(); }
 
-auto AudioFileSource::positionRelative() const -> double
+auto DJPlayer::positionRelative() const -> double
 {
     return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 }
 
-auto AudioFileSource::isPlaying() const -> bool { return transportSource.isPlaying(); }
+auto DJPlayer::isPlaying() const -> bool { return transportSource.isPlaying(); }
+
+auto DJPlayer::addListener(Listener* listener) -> void { _listeners.add(listener); }
+
+auto DJPlayer::removeListener(Listener* listener) -> void { _listeners.remove(listener); }
 
 }  // namespace ta

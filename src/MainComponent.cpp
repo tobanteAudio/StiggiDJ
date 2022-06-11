@@ -2,7 +2,7 @@
 
 #include "Core/Array.hpp"
 
-MainComponent::MainComponent() : _audioFileSource{_formatManager}
+MainComponent::MainComponent() : _djPlayer{_formatManager}
 {
     setAudioDevices();
 
@@ -13,17 +13,17 @@ MainComponent::MainComponent() : _audioFileSource{_formatManager}
 
     _sideBarLeft.onPlayClicked = [this]()
     {
-        if (_audioFileSource.isPlaying()) { _audioFileSource.stopPlayback(); }
-        else { _audioFileSource.startPlayback(); }
+        if (_djPlayer.isPlaying()) { _djPlayer.stopPlayback(); }
+        else { _djPlayer.startPlayback(); }
     };
 
-    _sideBarLeft.onCueClicked         = [this]() { _audioFileSource.positionRelative(0.0); };
-    _sideBarRight.onTempoDeltaChanged = [this](double delta) { _audioFileSource.speed((100.0 + delta) / 100.0); };
+    _sideBarLeft.onCueClicked         = [this]() { _djPlayer.positionRelative(0.0); };
+    _sideBarRight.onTempoDeltaChanged = [this](double delta) { _djPlayer.speed((100.0 + delta) / 100.0); };
     setSize(640, 800);
 }
 MainComponent::~MainComponent()
 {
-    _audioFileSource.stopPlayback();
+    _djPlayer.stopPlayback();
     _deviceManager.removeAudioCallback(&_audioPlayer);
     _audioPlayer.setSource(nullptr);
 }
@@ -61,8 +61,11 @@ auto MainComponent::setAudioDevices() -> void
     _formatManager.registerBasicFormats();
     _deviceManager.initialiseWithDefaultDevices(0, 2);
     _deviceManager.addAudioCallback(&_audioPlayer);
-    _audioPlayer.setSource(&_audioFileSource);
+    _audioPlayer.setSource(&_djPlayer);
 
-    _audioFileSource.loadFile(juce::File{"/home/tobante/Music/Loops/Bass.wav"});
-    _audioFileSource.gain(1.0);
+    auto file = juce::File{"/home/tobante/Music/Loops/Bass.wav"};
+    _djPlayer.loadFile(file);
+    _display.loadURL(juce::URL{file});
+    _djPlayer.gain(1.0);
+    _djPlayer.positionRelative(0.0);
 }

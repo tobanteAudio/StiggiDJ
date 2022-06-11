@@ -50,14 +50,18 @@ target_sources(StiggiDJ
 
         "src/Core/Array.hpp"
 
-        "src/DSP/AudioFileSource.cpp"
-        "src/DSP/AudioFileSource.hpp"
+        "src/DSP/DJPlayer.cpp"
+        "src/DSP/DJPlayer.hpp"
 
         "src/UI/Component/JogWheel.cpp"
         "src/UI/Component/JogWheel.hpp"
         "src/UI/Component/Placeholder.cpp"
         "src/UI/Component/Placeholder.hpp"
+        "src/UI/Component/WaveformDisplay.cpp"
+        "src/UI/Component/WaveformDisplay.hpp"
 
+        "src/UI/Section/Display.cpp"
+        "src/UI/Section/Display.hpp"
         "src/UI/Section/MainSection.cpp"
         "src/UI/Section/MainSection.hpp"
         "src/UI/Section/SideBarLeft.cpp"
@@ -85,6 +89,7 @@ target_link_libraries(StiggiDJ
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
+        juce::juce_audio_utils
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
