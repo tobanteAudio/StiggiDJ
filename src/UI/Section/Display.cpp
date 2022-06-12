@@ -62,6 +62,6 @@ auto Display::djPlayerFileAnalysisFinished(BeatTrackResult const& result) -> voi
         return;
     }
 
-    _bpm.setText("Error:" + result.errorMessage(), juce::sendNotification);
+    _bpm.setText("Error detecting BPM", juce::sendNotification);
 }
 }  // namespace ta

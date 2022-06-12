@@ -12,11 +12,13 @@ struct SideBarLeft final : juce::Component
 
     auto resized() -> void override;
 
+    std::function<void()> onLoadClicked{};
     std::function<void()> onCueClicked{};
     std::function<void()> onPlayClicked{};
 
 private:
     Placeholder _placeholder{"", juce::Colours::transparentBlack};
+    juce::TextButton _loadButton{"Load"};
     juce::TextButton _cueButton{"Cue"};
     juce::TextButton _playButton{"Play"};
 

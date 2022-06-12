@@ -5,7 +5,7 @@
 
 MainComponent::MainComponent() : _djPlayer{_threadPool, _formatManager}
 {
-    setAudioDevices();
+    setupAudioDevices();
 
     addAndMakeVisible(_sideBarLeft);
     addAndMakeVisible(_sideBarRight);
@@ -18,6 +18,7 @@ MainComponent::MainComponent() : _djPlayer{_threadPool, _formatManager}
         else { _djPlayer.startPlayback(); }
     };
 
+    _sideBarLeft.onLoadClicked          = [this]() { loadFile(); };
     _sideBarLeft.onCueClicked           = [this]() { _djPlayer.positionRelative(0.0); };
     _sideBarRight.onTempoDeltaChanged   = [this](double delta) { _djPlayer.speed((100.0 + delta) / 100.0); };
     _sideBarRight.onWaveformZoomChanged = [this](double zoom) { _display.waveformZoom(zoom); };
@@ -60,13 +61,27 @@ void MainComponent::resized()
     grid.performLayout(getLocalBounds().reduced(2));
 }
 
-auto MainComponent::setAudioDevices() -> void
+auto MainComponent::loadFile() -> void
+{
+    auto const* msg      = "Please select the audio file you want to load...";
+    auto const dir       = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
+    auto const fileFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
+
+    auto load = [this](auto const& chooser)
+    {
+        auto file = chooser.getResult();
+        if (!file.existsAsFile()) { return; }
+        _djPlayer.loadFile(file);
+    };
+
+    _fileChooser = std::make_unique<juce::FileChooser>(msg, dir, _formatManager.getWildcardForAllFormats());
+    _fileChooser->launchAsync(fileFlags, load);
+}
+
+auto MainComponent::setupAudioDevices() -> void
 {
     _formatManager.registerBasicFormats();
     _deviceManager.initialiseWithDefaultDevices(0, 2);
     _deviceManager.addAudioCallback(&_audioPlayer);
     _audioPlayer.setSource(&_djPlayer);
-
-    auto file = juce::File{"/home/tobante/Downloads/Lars_Huismann_Echo.mp3"};
-    _djPlayer.loadFile(file);
 }

@@ -5,9 +5,14 @@ namespace ta
 SideBarLeft::SideBarLeft()
 {
     addAndMakeVisible(_placeholder);
+    addAndMakeVisible(_loadButton);
     addAndMakeVisible(_cueButton);
     addAndMakeVisible(_playButton);
 
+    _loadButton.onClick = [this]()
+    {
+        if (onLoadClicked) { onLoadClicked(); }
+    };
     _cueButton.onClick = [this]()
     {
         if (onCueClicked) { onCueClicked(); }
@@ -32,7 +37,8 @@ auto SideBarLeft::resized() -> void
     grid.templateRows    = fillArray(Track(1_fr), 12);
     grid.templateColumns = fillArray(Track(1_fr), 1);
     grid.items.addArray({
-        GridItem(_placeholder).withArea(GridItem::Span(10), {}),
+        GridItem(_loadButton).withArea(GridItem::Span(1), {}),
+        GridItem(_placeholder).withArea(GridItem::Span(9), {}),
         GridItem(_cueButton).withArea(GridItem::Span(1), {}),
         GridItem(_playButton).withArea(GridItem::Span(1), {}),
     });

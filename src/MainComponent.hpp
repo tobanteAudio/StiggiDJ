@@ -18,7 +18,8 @@ struct MainComponent final : juce::Component
     auto resized() -> void override;
 
 private:
-    auto setAudioDevices() -> void;
+    auto loadFile() -> void;
+    auto setupAudioDevices() -> void;
 
     juce::ThreadPool _threadPool{juce::SystemStats::getNumCpus()};
 
@@ -31,6 +32,8 @@ private:
     ta::SideBarRight _sideBarRight{};
     ta::MainSection _jogWheel;
     ta::Display _display{_formatManager, _djPlayer};
+
+    std::unique_ptr<juce::FileChooser> _fileChooser{};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)  // NOLINT
 };
