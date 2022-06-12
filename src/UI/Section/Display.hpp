@@ -14,6 +14,7 @@ struct Display final
     ~Display() override;
 
     auto loadURL(juce::URL const& url) -> void;
+    auto waveformZoom(double zoom) -> void;
 
     auto resized() -> void override;
     auto timerCallback() -> void override;

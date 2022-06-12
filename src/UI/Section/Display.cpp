@@ -45,6 +45,8 @@ auto Display::timerCallback() -> void { _waveformDisplay.setPositionRelative(_dj
 
 auto Display::loadURL(juce::URL const& url) -> void { _waveformDisplay.loadURL(url); }
 
+auto Display::waveformZoom(double zoom) -> void { _waveformDisplay.lengthToShow(zoom); }
+
 auto Display::djPlayerFileChanged(juce::File const& file) -> void
 {
     _waveformDisplay.loadURL(juce::URL{file});

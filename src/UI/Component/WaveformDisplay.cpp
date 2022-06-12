@@ -15,20 +15,24 @@ void WaveformDisplay::paint(juce::Graphics& g)
     g.setColour(juce::Colours::white);
     if (!_fileLoaded) { return; }
 
-    auto const length = _audioThumb.getTotalLength();
-    _audioThumb.drawChannel(g, area, 0, length, 0, 1.0f);
+    auto const totalLength  = _audioThumb.getTotalLength();
+    auto const lengthToShow = totalLength * _proportionToShow;
+    auto const posInSeconds = totalLength * _playHeadPosition;
+
+    _audioThumb.drawChannel(g, area, posInSeconds, posInSeconds + lengthToShow, 0, 0.5f);
 
     auto const x      = area.getX();
     auto const top    = area.getY();
     auto const bottom = area.getBottom();
     auto const width  = area.getWidth();
 
-    g.fillRect(juce::Rectangle<double>(x + (width * _playHeadPosition), top, 2.0, bottom - top).toFloat());
+    // g.setColour(juce::Colours::black);
+    // g.fillRect(juce::Rectangle<double>(x + (width * _playHeadPosition), top, 2.0, bottom - top).toFloat());
 
-    g.setColour(juce::Colours::white.withAlpha(0.5f));
+    g.setColour(juce::Colours::black.withAlpha(0.5f));
     for (auto beat : _beatPositions)
     {
-        auto normalized = beat / length;
+        auto normalized = beat / totalLength;
         g.fillRect(juce::Rectangle<double>(x + (width * normalized), top, 2.0, bottom - top).toFloat());
     }
 }
@@ -54,6 +58,12 @@ void WaveformDisplay::setPositionRelative(double pos)
 auto WaveformDisplay::beatPositions(std::vector<double> positionsInSeconds) -> void
 {
     _beatPositions = std::move(positionsInSeconds);
+    repaint();
+}
+
+auto WaveformDisplay::lengthToShow(double proportionToShow) -> void
+{
+    _proportionToShow = proportionToShow;
     repaint();
 }
 

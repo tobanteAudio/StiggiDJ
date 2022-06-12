@@ -18,9 +18,10 @@ MainComponent::MainComponent() : _djPlayer{_threadPool, _formatManager}
         else { _djPlayer.startPlayback(); }
     };
 
-    _sideBarLeft.onCueClicked          = [this]() { _djPlayer.positionRelative(0.0); };
-    _sideBarRight.onTempoDeltaChanged  = [this](double delta) { _djPlayer.speed((100.0 + delta) / 100.0); };
-    _sideBarRight.onTimeStretchToggled = [this](bool isEnabled) { _djPlayer.timeStretch(isEnabled); };
+    _sideBarLeft.onCueClicked           = [this]() { _djPlayer.positionRelative(0.0); };
+    _sideBarRight.onTempoDeltaChanged   = [this](double delta) { _djPlayer.speed((100.0 + delta) / 100.0); };
+    _sideBarRight.onWaveformZoomChanged = [this](double zoom) { _display.waveformZoom(zoom); };
+    _sideBarRight.onTimeStretchToggled  = [this](bool isEnabled) { _djPlayer.timeStretch(isEnabled); };
 
     setSize(640, 800);
 }
@@ -66,6 +67,6 @@ auto MainComponent::setAudioDevices() -> void
     _deviceManager.addAudioCallback(&_audioPlayer);
     _audioPlayer.setSource(&_djPlayer);
 
-    auto file = juce::File{"/home/tobante/Music/Loops/Bass.wav"};
+    auto file = juce::File{"/home/tobante/Downloads/Lars_Huismann_Echo.mp3"};
     _djPlayer.loadFile(file);
 }

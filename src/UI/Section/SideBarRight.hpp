@@ -13,12 +13,15 @@ struct SideBarRight final : juce::Component
     auto resized() -> void override;
 
     std::function<void(double)> onTempoDeltaChanged{};
+    std::function<void(double)> onWaveformZoomChanged{};
     std::function<void(bool)> onTimeStretchToggled{};
 
 private:
     auto updateSpeedRange() -> void;
 
-    Placeholder _placeholder{"", juce::Colours::transparentBlack};
+    Placeholder _placeholderTop{"", juce::Colours::transparentBlack};
+    Placeholder _placeholderBottom{"", juce::Colours::transparentBlack};
+    juce::Slider _waveformZoom{juce::Slider::RotaryHorizontalVerticalDrag, juce::Slider::NoTextBox};
     juce::TextButton _vinylButton{"Vinyl"};
     juce::TextButton _warpButton{"Warp"};
     juce::ComboBox _tempoRange;

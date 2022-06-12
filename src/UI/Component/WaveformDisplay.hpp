@@ -16,7 +16,7 @@ struct WaveformDisplay final
 
     /// \brief Set the relative position of the playhead
     void setPositionRelative(double pos);
-
+    auto lengthToShow(double proportionToShow) -> void;
     auto beatPositions(std::vector<double> positionsInSeconds) -> void;
 
     void paint(juce::Graphics& g) override;
@@ -26,6 +26,7 @@ private:
     juce::AudioThumbnail _audioThumb;
     bool _fileLoaded{false};
     double _playHeadPosition{0};
+    double _proportionToShow{1.0};
     std::vector<double> _beatPositions{};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformDisplay)  // NOLINT
