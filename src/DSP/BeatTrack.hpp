@@ -7,9 +7,9 @@ namespace ta
 
 struct BeatTrackResult
 {
-    explicit BeatTrackResult(juce::String error) : _errorMessage{std::move(error)} {}
+    explicit BeatTrackResult(juce::String error) noexcept : _errorMessage{std::move(error)} {}
 
-    BeatTrackResult(double estimatedBPM, std::vector<double>&& onsetPositions)
+    BeatTrackResult(double estimatedBPM, std::vector<double>&& onsetPositions) noexcept
         : _bpm{estimatedBPM}, _onsets{std::move(onsetPositions)}
     {
     }
