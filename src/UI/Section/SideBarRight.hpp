@@ -13,6 +13,7 @@ struct SideBarRight final : juce::Component
     auto resized() -> void override;
 
     std::function<void(double)> onTempoDeltaChanged{};
+    std::function<void(bool)> onTimeStretchToggled{};
 
 private:
     auto updateSpeedRange() -> void;

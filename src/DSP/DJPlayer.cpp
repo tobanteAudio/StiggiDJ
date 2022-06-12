@@ -15,7 +15,7 @@ auto DJPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate) -> 
     _stretcher = std::make_unique<RubberBand::RubberBandStretcher>(
         sampleRate, 2, RubberBand::RubberBandStretcher::OptionProcessRealTime);
 
-    _stretcherBuffer.setSize(2, samplesPerBlockExpected);
+    _stretcherBuffer.setSize(2, 16);
 }
 
 auto DJPlayer::getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFill) -> void
@@ -23,18 +23,22 @@ auto DJPlayer::getNextAudioBlock(juce::AudioSourceChannelInfo const& bufferToFil
     jassert(bufferToFill.buffer->getNumChannels() == 2);
     jassert(bufferToFill.startSample == 0);
 
-    _stretcher->setTimeRatio(_stretchRatio.load());
-    _stretcherBuffer.setSize(2, bufferToFill.numSamples, false, false, true);
-
-    while (_stretcher->available() < bufferToFill.numSamples)
+    if (_timeStretchEnabled)
     {
-        auto ctx = juce::AudioSourceChannelInfo{_stretcherBuffer};
-        _resampleSource.getNextAudioBlock(ctx);
-        _stretcher->process(ctx.buffer->getArrayOfReadPointers(), ctx.buffer->getNumSamples(), false);
+        _stretcher->setTimeRatio(1.0 / _stretchRatio.load());
+
+        while (_stretcher->available() < bufferToFill.numSamples)
+        {
+            auto ctx = juce::AudioSourceChannelInfo{_stretcherBuffer};
+            _resampleSource.getNextAudioBlock(ctx);
+            _stretcher->process(ctx.buffer->getArrayOfReadPointers(), ctx.numSamples, false);
+        }
+
+        _stretcher->retrieve(bufferToFill.buffer->getArrayOfWritePointers(), bufferToFill.buffer->getNumSamples());
+        return;
     }
 
-    // _stretcher->process(bufferToFill.buffer->getArrayOfReadPointers(), bufferToFill.buffer->getNumSamples(), false);
-    _stretcher->retrieve(bufferToFill.buffer->getArrayOfWritePointers(), bufferToFill.buffer->getNumSamples());
+    _resampleSource.getNextAudioBlock(bufferToFill);
 }
 
 auto DJPlayer::releaseResources() -> void
@@ -73,8 +77,9 @@ auto DJPlayer::gain(double gain) -> void
 auto DJPlayer::speed(double ratio) -> void
 {
     jassert(juce::isPositiveAndBelow(ratio, 4.0));
-    // _resampleSource.setResamplingRatio(ratio);
-    _stretchRatio.store(1.0 / ratio);
+
+    _stretchRatio.store(ratio);
+    _resampleSource.setResamplingRatio(_timeStretchEnabled.load() ? 1.0 : ratio);
 }
 
 auto DJPlayer::position(double posInSecs) -> void { _transportSource.setPosition(posInSecs); }
@@ -84,6 +89,14 @@ auto DJPlayer::positionRelative(double pos) -> void
     jassert(juce::isPositiveAndBelow(pos, 1.0));
     position(_transportSource.getLengthInSeconds() * pos);
 }
+
+auto DJPlayer::timeStretch(bool isEnabled) -> void
+{
+    _timeStretchEnabled.store(isEnabled);
+    _resampleSource.setResamplingRatio(isEnabled ? 1.0 : _stretchRatio.load());
+}
+
+auto DJPlayer::timeStretch() const noexcept -> bool { return _timeStretchEnabled.load(); }
 
 auto DJPlayer::startPlayback() -> void { _transportSource.start(); }
 

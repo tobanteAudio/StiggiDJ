@@ -10,6 +10,12 @@ SideBarRight::SideBarRight()
     addAndMakeVisible(_tempoRange);
     addAndMakeVisible(_tempo);
 
+    _warpButton.setClickingTogglesState(true);
+    _warpButton.onClick = [this]()
+    {
+        if (onTimeStretchToggled) { onTimeStretchToggled(_warpButton.getToggleState()); }
+    };
+
     _tempoRange.setEditableText(false);
     _tempoRange.setJustificationType(juce::Justification::centred);
     _tempoRange.addItemList({"6%", "10%", "20%", "100%"}, 1);

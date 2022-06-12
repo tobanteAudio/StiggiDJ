@@ -17,8 +17,10 @@ MainComponent::MainComponent() : _djPlayer{_formatManager}
         else { _djPlayer.startPlayback(); }
     };
 
-    _sideBarLeft.onCueClicked         = [this]() { _djPlayer.positionRelative(0.0); };
-    _sideBarRight.onTempoDeltaChanged = [this](double delta) { _djPlayer.speed((100.0 + delta) / 100.0); };
+    _sideBarLeft.onCueClicked          = [this]() { _djPlayer.positionRelative(0.0); };
+    _sideBarRight.onTempoDeltaChanged  = [this](double delta) { _djPlayer.speed((100.0 + delta) / 100.0); };
+    _sideBarRight.onTimeStretchToggled = [this](bool isEnabled) { _djPlayer.timeStretch(isEnabled); };
+
     setSize(640, 800);
 }
 MainComponent::~MainComponent()

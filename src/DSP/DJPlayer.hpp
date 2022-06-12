@@ -32,6 +32,8 @@ struct DJPlayer final : juce::AudioSource
 
     auto gain(double gain) -> void;
     auto speed(double ratio) -> void;
+    auto timeStretch(bool isEnabled) -> void;
+    auto timeStretch() const noexcept -> bool;
 
     auto position(double posInSecs) -> void;
     auto positionRelative(double pos) -> void;
@@ -65,6 +67,7 @@ private:
     std::unique_ptr<RubberBand::RubberBandStretcher> _stretcher;
     juce::AudioBuffer<float> _stretcherBuffer;
     std::atomic<double> _stretchRatio{1.0};
+    std::atomic<bool> _timeStretchEnabled{false};
 
     juce::ListenerList<Listener> _listeners;
 };
