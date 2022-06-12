@@ -50,7 +50,7 @@ include(CodeCoverage)
 add_library(ta_rubberband)
 add_library(ta::rubberband ALIAS ta_rubberband)
 target_sources(ta_rubberband PRIVATE 3rd_party/rubberband/single/RubberBandSingle.cpp)
-target_compile_definitions(ta_rubberband PUBLIC NOMINMAX=1)
+target_compile_definitions(ta_rubberband PUBLIC WIN32_LEAN_AND_MEAN=1)
 target_include_directories(ta_rubberband PUBLIC 3rd_party/rubberband)
 
 add_subdirectory(3rd_party/JUCE)
