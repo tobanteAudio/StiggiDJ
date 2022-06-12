@@ -10,7 +10,7 @@ struct BeatTrackResult
     explicit BeatTrackResult(juce::String error) : _errorMessage{std::move(error)} {}
 
     BeatTrackResult(double estimatedBPM, std::vector<double>&& onsetPositions)
-        : _bpm{estimatedBPM}, onsets{std::move(onsetPositions)}
+        : _bpm{estimatedBPM}, _onsets{std::move(onsetPositions)}
     {
     }
 
@@ -19,11 +19,11 @@ struct BeatTrackResult
     auto errorMessage() const -> juce::String const& { return _errorMessage; }
 
     auto estimatedBPM() const -> double { return _bpm; }
-    auto beatPositions() const -> std::vector<double> const& { return onsets; }
+    auto beatPositions() const -> std::vector<double> const& { return _onsets; }
 
 private:
     double _bpm{};
-    std::vector<double> onsets{};
+    std::vector<double> _onsets{};
     juce::String _errorMessage{};
 };
 

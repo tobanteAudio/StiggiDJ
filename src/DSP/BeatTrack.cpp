@@ -17,15 +17,15 @@ auto beatTrack(juce::File const& audioFile) -> BeatTrackResult
     auto output   = process.readAllProcessOutput();
     if (exitCode != 0) { return BeatTrackResult{output}; }
 
-    auto outputLines = juce::StringArray::fromLines(output);
-    if (outputLines.size() < 2) { return BeatTrackResult{"Invalid output"}; }
+    auto lines = juce::StringArray::fromLines(output);
+    if (lines.size() < 2) { return BeatTrackResult{"Invalid output"}; }
 
-    auto bpm           = outputLines[0].getDoubleValue();
+    auto bpm           = lines[0].getDoubleValue();
     auto beatPositions = std::vector<double>{};
-    beatPositions.reserve(outputLines.size() - 1);
+    beatPositions.reserve(lines.size() - 1);
 
     auto toDouble = [](auto const& line) { return line.getDoubleValue(); };
-    std::transform(outputLines.begin() + 1, outputLines.end(), std::back_inserter(beatPositions), toDouble);
+    std::transform(std::next(std::begin(lines), 1), std::end(lines), std::back_inserter(beatPositions), toDouble);
 
     return BeatTrackResult{bpm, std::move(beatPositions)};
 }
