@@ -16,7 +16,7 @@ private:
     juce::String _text{};
     juce::Colour _background{};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Placeholder)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Placeholder)  // NOLINT
 };
 
 }  // namespace ta

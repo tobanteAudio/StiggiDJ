@@ -52,7 +52,7 @@ struct GuiAppApplication final : public juce::JUCEApplication
         */
 
     private:
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)  // NOLINT
     };
 
 private:

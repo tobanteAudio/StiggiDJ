@@ -13,7 +13,7 @@ struct Display final
     Display(juce::AudioFormatManager& formatManager, DJPlayer& djPlayer);
     ~Display() override;
 
-    auto loadURL(juce::URL url) -> void;
+    auto loadURL(juce::URL const& url) -> void;
 
     auto resized() -> void override;
     auto timerCallback() -> void override;
@@ -24,7 +24,7 @@ private:
     juce::AudioThumbnailCache _thumbnailCache;
     WaveformDisplay _waveformDisplay;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Display)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Display)  // NOLINT
 };
 
 }  // namespace ta

@@ -24,7 +24,7 @@ private:
     juce::ComboBox _tempoRange;
     juce::Slider _tempo{juce::Slider::LinearVertical, juce::Slider::TextBoxBelow};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SideBarRight)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SideBarRight)  // NOLINT
 };
 
 }  // namespace ta

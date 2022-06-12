@@ -30,5 +30,5 @@ private:
     ta::MainSection _jogWheel;
     ta::Display _display{_formatManager, _djPlayer};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)  // NOLINT
 };

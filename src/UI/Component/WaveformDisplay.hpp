@@ -25,6 +25,6 @@ private:
     bool _fileLoaded{false};
     double _position{0};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformDisplay)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformDisplay)  // NOLINT
 };
 }  // namespace ta

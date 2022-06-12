@@ -20,7 +20,7 @@ private:
     juce::TextButton _cueButton{"Cue"};
     juce::TextButton _playButton{"Play"};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SideBarLeft)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SideBarLeft)  // NOLINT
 };
 
 }  // namespace ta

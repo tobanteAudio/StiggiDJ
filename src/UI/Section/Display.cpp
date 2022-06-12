@@ -18,7 +18,7 @@ auto Display::resized() -> void { _waveformDisplay.setBounds(getLocalBounds()); 
 
 auto Display::timerCallback() -> void { _waveformDisplay.setPositionRelative(_djPlayer.positionRelative()); }
 
-auto Display::loadURL(juce::URL url) -> void { _waveformDisplay.loadURL(std::move(url)); }
+auto Display::loadURL(juce::URL const& url) -> void { _waveformDisplay.loadURL(url); }
 
 auto Display::djPlayerFileChanged(juce::File const& file) -> void { _waveformDisplay.loadURL(juce::URL{file}); }
 

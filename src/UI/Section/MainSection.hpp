@@ -14,7 +14,7 @@ struct MainSection final : juce::Component
 private:
     JogWheel _jogWheel{"Jogwheel", juce::Colours::green};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainSection)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainSection)  // NOLINT
 };
 
 }  // namespace ta
