@@ -3,7 +3,10 @@
 namespace ta
 {
 
-DJPlayer::DJPlayer(juce::AudioFormatManager& formatManager) : _formatManager(formatManager) {}
+DJPlayer::DJPlayer(juce::ThreadPool& threadPool, juce::AudioFormatManager& formatManager)
+    : _threadPool{threadPool}, _formatManager(formatManager)
+{
+}
 
 DJPlayer::~DJPlayer() = default;
 
@@ -47,11 +50,11 @@ auto DJPlayer::releaseResources() -> void
     _resampleSource.releaseResources();
 }
 
-auto DJPlayer::loadFile(juce::File audioFile) -> LengthAndSamplerate
+auto DJPlayer::loadFile(juce::File file) -> LengthAndSamplerate
 {
     auto sr      = 0.0;
     auto length  = std::int64_t{};
-    auto* reader = _formatManager.createReaderFor(audioFile);
+    auto* reader = _formatManager.createReaderFor(file);
 
     if (reader != nullptr)
     {
@@ -64,7 +67,16 @@ auto DJPlayer::loadFile(juce::File audioFile) -> LengthAndSamplerate
 
     gain(1.0);
     positionRelative(0.0);
-    _listeners.call(&Listener::djPlayerFileChanged, audioFile);
+    _listeners.call(&Listener::djPlayerFileChanged, file);
+
+    auto runBeatTrack = [this, file]
+    {
+        auto result        = beatTrack(file);
+        auto callListeners = [this, result] { _listeners.call(&Listener::djPlayerFileAnalysisFinished, result); };
+        juce::MessageManager::callAsync(callListeners);
+    };
+
+    _threadPool.addJob(runBeatTrack);
 
     return LengthAndSamplerate{length, sr};
 }

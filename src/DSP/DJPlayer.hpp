@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DSP/BeatTrack.hpp"
+
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_audio_formats/juce_audio_formats.h>
@@ -18,14 +20,15 @@ struct DJPlayerListener
 {
     virtual ~DJPlayerListener() = default;
 
-    virtual auto djPlayerFileChanged(juce::File const& file) -> void = 0;
+    virtual auto djPlayerFileChanged(juce::File const& file) -> void { (void)file; }
+    virtual auto djPlayerFileAnalysisFinished(BeatTrackResult const& result) -> void { (void)result; }
 };
 
 struct DJPlayer final : juce::AudioSource
 {
     using Listener = DJPlayerListener;
 
-    explicit DJPlayer(juce::AudioFormatManager& formatManager);
+    DJPlayer(juce::ThreadPool& threadPool, juce::AudioFormatManager& formatManager);
     ~DJPlayer() override;
 
     auto loadFile(juce::File audioFile) -> LengthAndSamplerate;
@@ -59,6 +62,8 @@ struct DJPlayer final : juce::AudioSource
     auto releaseResources() -> void override;
 
 private:
+    juce::ThreadPool& _threadPool;
+
     juce::AudioFormatManager& _formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> _readerSource;
     juce::AudioTransportSource _transportSource;

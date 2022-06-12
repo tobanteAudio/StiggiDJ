@@ -20,6 +20,8 @@ struct MainComponent final : juce::Component
 private:
     auto setAudioDevices() -> void;
 
+    juce::ThreadPool _threadPool{juce::SystemStats::getNumCpus()};
+
     juce::AudioDeviceManager _deviceManager;
     juce::AudioFormatManager _formatManager;
     juce::AudioSourcePlayer _audioPlayer;

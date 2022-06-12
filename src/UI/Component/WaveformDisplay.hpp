@@ -17,13 +17,16 @@ struct WaveformDisplay final
     /// \brief Set the relative position of the playhead
     void setPositionRelative(double pos);
 
+    auto beatPositions(std::vector<double> positionsInSeconds) -> void;
+
     void paint(juce::Graphics& g) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
 private:
     juce::AudioThumbnail _audioThumb;
     bool _fileLoaded{false};
-    double _position{0};
+    double _playHeadPosition{0};
+    std::vector<double> _beatPositions{};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformDisplay)  // NOLINT
 };

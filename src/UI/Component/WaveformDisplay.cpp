@@ -13,14 +13,23 @@ void WaveformDisplay::paint(juce::Graphics& g)
     auto area = getLocalBounds().reduced(5);
 
     g.setColour(juce::Colours::white);
-    if (_fileLoaded)
-    {
-        _audioThumb.drawChannel(g, area, 0, _audioThumb.getTotalLength(), 0, 1.0f);
+    if (!_fileLoaded) { return; }
 
-        auto x      = area.getX() + (area.getWidth() * _position);
-        auto top    = area.getY();
-        auto bottom = area.getBottom();
-        g.fillRect(juce::Rectangle<double>(x, top, 3.0, bottom - top).toFloat());
+    auto const length = _audioThumb.getTotalLength();
+    _audioThumb.drawChannel(g, area, 0, length, 0, 1.0f);
+
+    auto const x      = area.getX();
+    auto const top    = area.getY();
+    auto const bottom = area.getBottom();
+    auto const width  = area.getWidth();
+
+    g.fillRect(juce::Rectangle<double>(x + (width * _playHeadPosition), top, 2.0, bottom - top).toFloat());
+
+    g.setColour(juce::Colours::white.withAlpha(0.5f));
+    for (auto beat : _beatPositions)
+    {
+        auto normalized = beat / length;
+        g.fillRect(juce::Rectangle<double>(x + (width * normalized), top, 2.0, bottom - top).toFloat());
     }
 }
 
@@ -35,10 +44,17 @@ void WaveformDisplay::changeListenerCallback(juce::ChangeBroadcaster* /*source*/
 
 void WaveformDisplay::setPositionRelative(double pos)
 {
-    if (pos != _position && !std::isnan(pos))
+    if (pos != _playHeadPosition && !std::isnan(pos))
     {
-        _position = pos;
+        _playHeadPosition = pos;
         repaint();
     }
 }
+
+auto WaveformDisplay::beatPositions(std::vector<double> positionsInSeconds) -> void
+{
+    _beatPositions = std::move(positionsInSeconds);
+    repaint();
+}
+
 }  // namespace ta

@@ -1,8 +1,9 @@
 #include "MainComponent.hpp"
 
 #include "Core/Array.hpp"
+#include "DSP/BeatTrack.hpp"
 
-MainComponent::MainComponent() : _djPlayer{_formatManager}
+MainComponent::MainComponent() : _djPlayer{_threadPool, _formatManager}
 {
     setAudioDevices();
 

@@ -18,11 +18,14 @@ struct Display final
     auto resized() -> void override;
     auto timerCallback() -> void override;
     auto djPlayerFileChanged(juce::File const& file) -> void override;
+    auto djPlayerFileAnalysisFinished(BeatTrackResult const& result) -> void override;
 
 private:
     DJPlayer& _djPlayer;
     juce::AudioThumbnailCache _thumbnailCache;
     WaveformDisplay _waveformDisplay;
+    juce::Label _filename;
+    juce::Label _bpm;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Display)  // NOLINT
 };

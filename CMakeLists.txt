@@ -83,6 +83,8 @@ target_sources(StiggiDJ
 
         "src/Core/Array.hpp"
 
+        "src/DSP/BeatTrack.cpp"
+        "src/DSP/BeatTrack.hpp"
         "src/DSP/DJPlayer.cpp"
         "src/DSP/DJPlayer.hpp"
 
