@@ -23,9 +23,9 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(CMAKE_C_STANDARD_REQUIRED ON)
     set(CMAKE_C_EXTENSIONS OFF)
 
-    # Set C++14 with no extensions enabled. Fail if the
+    # Set C++17 with no extensions enabled. Fail if the
     # standard is not supported.
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -39,7 +39,7 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
     # Minimum macOS version
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
 endif ()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -50,6 +50,7 @@ include(CodeCoverage)
 add_library(ta_rubberband)
 add_library(ta::rubberband ALIAS ta_rubberband)
 target_sources(ta_rubberband PRIVATE 3rd_party/rubberband/single/RubberBandSingle.cpp)
+target_compile_definitions(ta_rubberband PUBLIC NOMINMAX=1)
 target_include_directories(ta_rubberband PUBLIC 3rd_party/rubberband)
 
 add_subdirectory(3rd_party/JUCE)
