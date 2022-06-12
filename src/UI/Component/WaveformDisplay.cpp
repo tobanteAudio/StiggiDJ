@@ -20,7 +20,7 @@ void WaveformDisplay::paint(juce::Graphics& g)
         auto x      = area.getX() + (area.getWidth() * _position);
         auto top    = area.getY();
         auto bottom = area.getBottom();
-        g.fillRect(juce::Rectangle<float>(x, top, 3.0f, bottom - top));
+        g.fillRect(juce::Rectangle<double>(x, top, 3.0, bottom - top).toFloat());
     }
 }
 

@@ -50,10 +50,10 @@ auto DJPlayer::releaseResources() -> void
 auto DJPlayer::loadFile(juce::File audioFile) -> LengthAndSamplerate
 {
     auto sr      = 0.0;
-    auto length  = 0;
+    auto length  = std::int64_t{};
     auto* reader = _formatManager.createReaderFor(audioFile);
 
-    if (reader != nullptr)  // good file!
+    if (reader != nullptr)
     {
         length = reader->lengthInSamples;
         sr     = reader->sampleRate;
@@ -72,7 +72,7 @@ auto DJPlayer::loadFile(juce::File audioFile) -> LengthAndSamplerate
 auto DJPlayer::gain(double gain) -> void
 {
     jassert(juce::isPositiveAndBelow(gain, 4.0));
-    _transportSource.setGain(gain);
+    _transportSource.setGain(static_cast<float>(gain));
 }
 auto DJPlayer::speed(double ratio) -> void
 {
