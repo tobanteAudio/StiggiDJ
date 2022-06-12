@@ -41,7 +41,7 @@ auto Display::resized() -> void
     grid.performLayout(getLocalBounds());
 }
 
-auto Display::timerCallback() -> void { _waveformDisplay.setPositionRelative(_djPlayer.positionRelative()); }
+auto Display::timerCallback() -> void { _waveformDisplay.positionRelative(_djPlayer.positionRelative()); }
 
 auto Display::loadURL(juce::URL const& url) -> void { _waveformDisplay.loadURL(url); }
 

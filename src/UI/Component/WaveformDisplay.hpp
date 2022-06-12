@@ -15,7 +15,7 @@ struct WaveformDisplay final
     void loadURL(juce::URL const& audioURL);
 
     /// \brief Set the relative position of the playhead
-    void setPositionRelative(double pos);
+    void positionRelative(double pos);
     auto lengthToShow(double proportionToShow) -> void;
     auto beatPositions(std::vector<double> positionsInSeconds) -> void;
 

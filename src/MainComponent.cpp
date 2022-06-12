@@ -9,8 +9,12 @@ MainComponent::MainComponent() : _djPlayer{_threadPool, _formatManager}
 
     addAndMakeVisible(_sideBarLeft);
     addAndMakeVisible(_sideBarRight);
-    addAndMakeVisible(_display);
+    addAndMakeVisible(_tabs);
     addAndMakeVisible(_jogWheel);
+
+    _tabs.addTab("Tack", juce::Colours::transparentBlack, &_display, false);
+    _tabs.addTab("Browser", juce::Colours::transparentBlack, &_browser, false);
+    _tabs.addTab("Settings", juce::Colours::transparentBlack, &_settings, false);
 
     _sideBarLeft.onPlayClicked = [this]()
     {
@@ -53,7 +57,7 @@ void MainComponent::resized()
     grid.templateColumns = ta::fillArray(Track(1_fr), 7);
     grid.items.addArray({
         GridItem(_sideBarLeft).withArea(GridItem::Span(3), GridItem::Span(1)),
-        GridItem(_display).withArea(GridItem::Span(1), GridItem::Span(5)),
+        GridItem(_tabs).withArea(GridItem::Span(1), GridItem::Span(5)),
         GridItem(_jogWheel).withArea(GridItem::Span(2), GridItem::Span(5)),
         GridItem(_sideBarRight).withArea(GridItem::Span(3), GridItem::Span(1)),
     });

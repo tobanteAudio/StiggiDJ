@@ -32,6 +32,9 @@ private:
     ta::SideBarRight _sideBarRight{};
     ta::MainSection _jogWheel;
     ta::Display _display{_formatManager, _djPlayer};
+    ta::Placeholder _browser{"Browser", juce::Colours::transparentBlack};
+    ta::Placeholder _settings{"Settings", juce::Colours::transparentBlack};
+    juce::TabbedComponent _tabs{juce::TabbedButtonBar::TabsAtTop};
 
     std::unique_ptr<juce::FileChooser> _fileChooser{};
 

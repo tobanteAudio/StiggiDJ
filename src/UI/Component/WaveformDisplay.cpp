@@ -3,7 +3,7 @@
 namespace ta
 {
 WaveformDisplay::WaveformDisplay(juce::AudioFormatManager& formatManagerToUse, juce::AudioThumbnailCache& cacheToUse)
-    : _audioThumb(1000, formatManagerToUse, cacheToUse)
+    : _audioThumb(128, formatManagerToUse, cacheToUse)
 {
     _audioThumb.addChangeListener(this);
 }
@@ -21,20 +21,20 @@ void WaveformDisplay::paint(juce::Graphics& g)
 
     _audioThumb.drawChannel(g, area, posInSeconds, posInSeconds + lengthToShow, 0, 0.5f);
 
-    auto const x      = area.getX();
-    auto const top    = area.getY();
-    auto const bottom = area.getBottom();
-    auto const width  = area.getWidth();
+    // auto const x      = area.getX();
+    // auto const top    = area.getY();
+    // auto const bottom = area.getBottom();
+    // auto const width  = area.getWidth();
 
     // g.setColour(juce::Colours::black);
     // g.fillRect(juce::Rectangle<double>(x + (width * _playHeadPosition), top, 2.0, bottom - top).toFloat());
 
-    g.setColour(juce::Colours::black.withAlpha(0.5f));
-    for (auto beat : _beatPositions)
-    {
-        auto normalized = beat / totalLength;
-        g.fillRect(juce::Rectangle<double>(x + (width * normalized), top, 2.0, bottom - top).toFloat());
-    }
+    // g.setColour(juce::Colours::black.withAlpha(0.5f));
+    // for (auto beat : _beatPositions)
+    // {
+    //     auto normalized = beat / totalLength;
+    //     g.fillRect(juce::Rectangle<double>(x + (width * normalized), top, 2.0, bottom - top).toFloat());
+    // }
 }
 
 void WaveformDisplay::loadURL(juce::URL const& audioURL)
@@ -46,7 +46,7 @@ void WaveformDisplay::loadURL(juce::URL const& audioURL)
 
 void WaveformDisplay::changeListenerCallback(juce::ChangeBroadcaster* /*source*/) { repaint(); }
 
-void WaveformDisplay::setPositionRelative(double pos)
+void WaveformDisplay::positionRelative(double pos)
 {
     if (pos != _playHeadPosition && !std::isnan(pos))
     {
