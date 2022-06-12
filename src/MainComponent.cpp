@@ -40,7 +40,7 @@ void MainComponent::resized()
     using namespace juce;
     using Track = Grid::TrackInfo;
 
-    auto grid            = Grid{};
+    Grid grid{};
     grid.rowGap          = 4_px;
     grid.columnGap       = 4_px;
     grid.autoColumns     = Track(1_fr);
