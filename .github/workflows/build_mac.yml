@@ -19,10 +19,10 @@ jobs:
       - name: Install dependencies
         run: |
           brew update
-          brew install ninja conan
+          brew install ninja
 
       - name: CMake configure -- Release
-        run: cmake -S . -G Xcode -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -G "Ninja" -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
 
       - name: CMake build -- Release
         run: cmake --build cmake-build-release
