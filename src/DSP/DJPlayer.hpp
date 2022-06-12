@@ -4,6 +4,8 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_audio_formats/juce_audio_formats.h>
 
+#include "rubberband/RubberBandStretcher.h"
+
 namespace ta
 {
 struct LengthAndSamplerate
@@ -59,6 +61,10 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> _readerSource;
     juce::AudioTransportSource _transportSource;
     juce::ResamplingAudioSource _resampleSource{&_transportSource, false, 2};
+
+    std::unique_ptr<RubberBand::RubberBandStretcher> _stretcher;
+    juce::AudioBuffer<float> _stretcherBuffer;
+    std::atomic<double> _stretchRatio{1.0};
 
     juce::ListenerList<Listener> _listeners;
 };

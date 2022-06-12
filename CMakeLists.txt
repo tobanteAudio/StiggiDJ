@@ -47,6 +47,11 @@ include(CompilerOptions)
 include(CompilerWarnings)
 include(CodeCoverage)
 
+add_library(ta_rubberband)
+add_library(ta::rubberband ALIAS ta_rubberband)
+target_sources(ta_rubberband PRIVATE 3rd_party/rubberband/single/RubberBandSingle.cpp)
+target_include_directories(ta_rubberband PUBLIC 3rd_party/rubberband)
+
 add_subdirectory(3rd_party/JUCE)
 set_directory_properties(PROPERTIES JUCE_COMPANY_COPYRIGHT "SPDX: GPL-3.0-only")
 set_directory_properties(PROPERTIES JUCE_COMPANY_NAME "tobantAudio")
@@ -113,6 +118,7 @@ target_link_libraries(StiggiDJ
         juce::juce_audio_formats
         juce::juce_audio_utils
     PUBLIC
+        ta::rubberband
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
