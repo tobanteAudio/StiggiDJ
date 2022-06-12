@@ -59,6 +59,15 @@ set_directory_properties(PROPERTIES JUCE_COMPANY_NAME "tobantAudio")
 set_directory_properties(PROPERTIES JUCE_COMPANY_WEBSITE "https://github.com/tobanteAudio/StiggiDJ")
 set_directory_properties(PROPERTIES JUCE_COMPANY_EMAIL "tobanteAudio@gmail.com")
 
+juce_add_binary_data(StiggiDJ_BinaryData
+    HEADER_NAME
+        "BinaryData.hpp"
+    NAMESPACE
+        tabd
+    SOURCES
+        "Makefile"
+)
+
 juce_add_gui_app(StiggiDJ
     PRODUCT_NAME "Stiggi DJ"
     BUNDLE_ID "com.tobanteAudio.stiggi-dj"
@@ -113,16 +122,19 @@ target_include_directories(StiggiDJ
 
 target_link_libraries(StiggiDJ
     PRIVATE
+        StiggiDJ_BinaryData
+
         juce::juce_gui_extra
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
         juce::juce_audio_utils
-    PUBLIC
-        ta::rubberband
+
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
+
+        ta::rubberband
         ta::compiler_options
         ta::compiler_warnings
         ta::coverage
