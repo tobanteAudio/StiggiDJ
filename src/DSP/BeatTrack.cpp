@@ -1,5 +1,6 @@
 #include "BeatTrack.hpp"
 
+#include "DSP/AudioFile.hpp"
 #include "DSP/AudioFileConverter.hpp"
 
 namespace ta
@@ -7,17 +8,22 @@ namespace ta
 auto beatTrack(juce::File const& audioFile) -> BeatTrackResult
 {
     juce::TemporaryFile tmpFile{};
-    AudioFileConverter converter{};
-    auto const convertOptions = AudioFileConverterOptions{audioFile, tmpFile.getFile()};
-    auto const convertResult  = converter.convert<juce::WavAudioFormat>(convertOptions);
-    if (!convertResult.success) { return BeatTrackResult{convertResult.errorMessage}; }
+    auto activeFile = audioFile;
+    if (!fileHasFormat<juce::WavAudioFormat>(activeFile))
+    {
+        AudioFileConverter converter{};
+        activeFile                = tmpFile.getFile();
+        auto const convertOptions = AudioFileConverterOptions{audioFile, activeFile};
+        auto const convertResult  = converter.convert<juce::WavAudioFormat>(convertOptions);
+        if (!convertResult.success) { return BeatTrackResult{convertResult.errorMessage}; }
+    }
 
     auto const* pythonPath = "/home/tobante/Developer/tobanteAudio/StiggiDJ/venv/bin/python3";
     auto const scriptDir   = juce::File{"/home/tobante/Developer/tobanteAudio/StiggiDJ/src/Scripts"};
     auto const scriptPath  = scriptDir.getChildFile("bpm_track.py");
 
     juce::ChildProcess process{};
-    auto processArgs = juce::StringArray{pythonPath, scriptPath.getFullPathName(), tmpFile.getFile().getFullPathName()};
+    auto processArgs = juce::StringArray{pythonPath, scriptPath.getFullPathName(), activeFile.getFullPathName()};
     if (!process.start(processArgs)) { return BeatTrackResult{"Failed to start"}; }
     if (!process.waitForProcessToFinish(10'000)) { return BeatTrackResult{"Timeout"}; }
 
