@@ -49,7 +49,8 @@ inline auto AudioFileConverter::convert(Options const& options) -> Result
     auto writer = std::unique_ptr<juce::AudioFormatWriter>(format.createWriterFor(out.get(), sr, ch, bits, {}, 0));
 
     if (writer == nullptr) { return Result{false, "Failed to convert to wav"}; }
-    out.release();  // writer took ownership
+    auto* p = out.release();  // writer took ownership
+    (void)p;                  // fixes nodiscard warning on release
 
     writer->writeFromAudioReader(*reader, 0, reader->lengthInSamples);
     writer->flush();

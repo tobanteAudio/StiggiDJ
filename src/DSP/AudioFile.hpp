@@ -9,6 +9,9 @@ namespace ta
 template<typename ExpectedFormat>
 auto fileHasFormat(juce::AudioFormatManager& formatManager, juce::File const& file) -> bool
 {
+    static_assert(std::is_base_of<juce::AudioFormat, ExpectedFormat>::value,
+                  "ExpectedFormat must be a subclass of AudioFormat");
+
     auto reader = std::unique_ptr<juce::AudioFormatReader>(formatManager.createReaderFor(file));
     if (reader == nullptr) { return false; }
     return dynamic_cast<ExpectedFormat*>(reader.get()) != nullptr;
