@@ -15,7 +15,7 @@ struct AudioFileConverterOptions
 struct AudioFileConverterResult
 {
     bool success{false};
-    juce::String errorMessage{};
+    std::string errorMessage{};
 };
 
 struct AudioFileConverter

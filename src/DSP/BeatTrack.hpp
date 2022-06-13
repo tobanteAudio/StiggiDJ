@@ -5,28 +5,30 @@
 namespace ta
 {
 
+struct BeatTrackOptions
+{
+    juce::File audioFile{};
+    bool sumToMono{false};
+};
+
 struct BeatTrackResult
 {
-    explicit BeatTrackResult(juce::String error) noexcept : _errorMessage{std::move(error)} {}
+    explicit BeatTrackResult(std::string error) noexcept;
+    BeatTrackResult(double bpm, std::vector<double>&& beatPositions) noexcept;
 
-    BeatTrackResult(double estimatedBPM, std::vector<double>&& onsetPositions) noexcept
-        : _bpm{estimatedBPM}, _onsets{std::move(onsetPositions)}
-    {
-    }
+    auto ok() const noexcept -> bool;
+    auto error() const noexcept -> bool;
+    auto errorMessage() const -> std::string const&;
 
-    auto ok() const noexcept -> bool { return _errorMessage.isEmpty(); }
-    auto error() const noexcept -> bool { return !ok(); }
-    auto errorMessage() const -> juce::String const& { return _errorMessage; }
-
-    auto estimatedBPM() const -> double { return _bpm; }
-    auto beatPositions() const -> std::vector<double> const& { return _onsets; }
+    auto bpm() const -> double;
+    auto beatPositions() const -> std::vector<double> const&;
 
 private:
     double _bpm{};
-    std::vector<double> _onsets{};
-    juce::String _errorMessage{};
+    std::vector<double> _beatPositions{};
+    std::string _errorMessage{};
 };
 
-auto beatTrack(juce::File const& audioFile) -> BeatTrackResult;
+auto beatTrack(BeatTrackOptions const& options) -> BeatTrackResult;
 
 }  // namespace ta

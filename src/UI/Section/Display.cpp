@@ -57,7 +57,7 @@ auto Display::djPlayerFileAnalysisFinished(BeatTrackResult const& result) -> voi
 {
     if (result.ok())
     {
-        _bpm.setText(juce::String{result.estimatedBPM()} + " bpm", juce::sendNotification);
+        _bpm.setText(juce::String{result.bpm()} + " bpm", juce::sendNotification);
         _waveformDisplay.beatPositions(result.beatPositions());
         return;
     }

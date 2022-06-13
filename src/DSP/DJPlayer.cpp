@@ -71,7 +71,7 @@ auto DJPlayer::loadFile(juce::File file) -> LengthAndSamplerate
 
     auto runBeatTrack = [this, file]
     {
-        auto result        = beatTrack(file);
+        auto result        = beatTrack({file});
         auto callListeners = [this, result] { _listeners.call(&Listener::djPlayerFileAnalysisFinished, result); };
         juce::MessageManager::callAsync(callListeners);
     };

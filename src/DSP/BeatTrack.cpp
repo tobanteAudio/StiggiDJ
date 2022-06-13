@@ -5,15 +5,33 @@
 
 namespace ta
 {
-auto beatTrack(juce::File const& audioFile) -> BeatTrackResult
+
+BeatTrackResult::BeatTrackResult(std::string error) noexcept : _errorMessage{std::move(error)} {}
+
+BeatTrackResult::BeatTrackResult(double bpm, std::vector<double>&& beatPositions) noexcept
+    : _bpm{bpm}, _beatPositions{std::move(beatPositions)}
+{
+}
+
+auto BeatTrackResult::ok() const noexcept -> bool { return _errorMessage.empty(); }
+
+auto BeatTrackResult::error() const noexcept -> bool { return !ok(); }
+
+auto BeatTrackResult::errorMessage() const -> std::string const& { return _errorMessage; }
+
+auto BeatTrackResult::bpm() const -> double { return _bpm; }
+
+auto BeatTrackResult::beatPositions() const -> std::vector<double> const& { return _beatPositions; }
+
+auto beatTrack(BeatTrackOptions const& options) -> BeatTrackResult
 {
     juce::TemporaryFile tmpFile{};
-    auto activeFile = audioFile;
+    auto activeFile = options.audioFile;
     if (!fileHasFormat<juce::WavAudioFormat>(activeFile))
     {
         AudioFileConverter converter{};
         activeFile                = tmpFile.getFile();
-        auto const convertOptions = AudioFileConverterOptions{audioFile, activeFile};
+        auto const convertOptions = AudioFileConverter::Options{options.audioFile, activeFile};
         auto const convertResult  = converter.convert<juce::WavAudioFormat>(convertOptions);
         if (!convertResult.success) { return BeatTrackResult{convertResult.errorMessage}; }
     }
@@ -29,7 +47,7 @@ auto beatTrack(juce::File const& audioFile) -> BeatTrackResult
 
     auto exitCode = process.getExitCode();
     auto output   = process.readAllProcessOutput();
-    if (exitCode != 0) { return BeatTrackResult{output}; }
+    if (exitCode != 0) { return BeatTrackResult{output.toStdString()}; }
 
     auto lines = juce::StringArray::fromLines(output);
     if (lines.size() < 2) { return BeatTrackResult{"Invalid output"}; }
